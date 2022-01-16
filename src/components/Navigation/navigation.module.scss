@@ -1,0 +1,28 @@
+.container {
+    p {
+        color: var(--pink-light-300);
+        margin-bottom: 3rem;
+        font-weight: 400;
+    }
+}
+.navigation {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+
+    a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+        
+        svg{
+            margin-right: 0.5rem;
+        }
+        
+        &:hover{
+            color: var(--pink-light-300);
+        }
+    }
+}
