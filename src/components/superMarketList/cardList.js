@@ -1,14 +1,15 @@
-
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { ContextApp } from '../../contexts/useContext'
 import styles from './superMarketList.module.scss'
 export function CardList(props) {
+
     const { marketPropsCard, setMarketPropsCard } = useContext(ContextApp)
-    const { editModel, setEditModel } = useContext(ContextApp)
+    const { editModel, setEditModel, setShowSlide } = useContext(ContextApp)
 
     const handleEditModelOn = async () => {
         if (!props.editOn) {
-            return 
+            setMarketPropsCard(props.market)
+            return setShowSlide(true)
         }
         if (editModel === false) {
             setEditModel(true)
@@ -16,7 +17,7 @@ export function CardList(props) {
         } else {
             try {
                 setEditModel(false)
-                await setMarketPropsCard('')
+                await setMarketPropsCard(props.market)
             } catch {
                 return
             }
@@ -25,11 +26,13 @@ export function CardList(props) {
         }
     }
 
+
     return (
         <div
             onClick={handleEditModelOn}
             className={marketPropsCard._id !== props.market._id ? !props.editOn ? styles.cardList : `${styles.cardList} ${styles.editOn}` : styles.cardList}>
-            <img src={props.market.superMarketMainImage} alt='Image main' />
+
+            <img src={props.market.superMarketMainImage.location} alt={props.market.superMarketName} />
             <div>
                 <div>
                     <h4>Name</h4>
@@ -40,8 +43,6 @@ export function CardList(props) {
                     <h4>Phone</h4>
                     <p>{props.market.superMarketPhone}</p>
                 </div>
-
-
             </div>
             <div className={styles.description}>
                 <h4>Description</h4>

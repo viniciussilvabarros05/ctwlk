@@ -1,26 +1,24 @@
 import styles from "./editModel.module.scss"
 import api from '../../services/api'
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { ContextApp } from "../../contexts/useContext";
 
-export function EditModel() {
-    const [image, setImage] = useState('')
-    const [errorImage, setErrorImage] = useState(false)
-    const { marketPropsCard } = useContext(ContextApp)
+export function EditModel(props) {
+
+    const { marketPropsCard, setMarketPropsCard, setEditModel } = useContext(ContextApp)
     const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
     const CreateMarketFormSchema = yup.object().shape({
 
         superMarketName: yup.string().required('Names is mandatory'),
-        // superMarketMainImage: yup.mixed().required(),
-        superMarketAdditionalImages: yup.mixed().required(),
-        // superMarketAdditionalImages: yup.mixed().required(),
-        // superMarketAdditionalImage2: yup.mixed().required("Image is required"),
-        // superMarketAdditionalImage3: yup.mixed().required("Image is required"),
-
+        superMarketMainImage: yup.mixed().required(),
+        superMarketAdditionalImage: yup.mixed(),
+        superMarketAdditionalImage: yup.mixed(),
+        superMarketAdditionalImage: yup.mixed(),
+        superMarketAdditionalImage: yup.mixed(),
 
         street: yup.string().min(2).required("Street is required"),
         number: yup.number().required("Number is required"),
@@ -41,112 +39,163 @@ export function EditModel() {
 
     const handleCreateMarket = async (values) => {
         const form = new FormData()
-        const Images = [values.superMarketAdditionalImages]
-        const validate = await Images.some(item => item.length === 0)
-
-        if (validate) {
-            setErrorImage(true)
-            return
-        } else {
-            setErrorImage(false)
-        }
-
-        values.superMarketAdditionalImages = values.superMarketAdditionalImages[0]
-        form.append('superMarketAdditionalImages', values.superMarketAdditionalImages)
+    
+        form.append('id', marketPropsCard._id)
+        form.append('superMarketMainImage', values.superMarketMainImage[0])
+        form.append('superMarketAdditionalImage1', values.superMarketAdditionalImage1[0])
+        form.append('superMarketAdditionalImage2', values.superMarketAdditionalImage2[0])
+        form.append('superMarketAdditionalImage3', values.superMarketAdditionalImage3[0])
         form.append('superMarketName', values.superMarketName)
         form.append('street', values.street)
         form.append('number', values.number)
         form.append('zip', values.zip)
         form.append('country', values.country)
+        form.append('district', values.district)
         form.append('city', values.city)
         form.append('state', values.state)
         form.append('superMarketDescription', values.superMarketDescription)
         form.append('superMarketPhone', values.superMarketPhone)
 
-        const response = await api.post('register', form)
+        try {
+            const response = await api.post('update', form)
+            setEditModel(false)
+            setMarketPropsCard('')
+            props.setEdit(false)
+            alert(response.data)
+        } catch (error) {
+            alert('Erro ao chamar')
+        }
 
-        alert(response.data)
+    }
+    const handleDeleteMarket = async (id) => {
+        try {
+            const response = await api.delete(`delete/${id}`).then(item => {
+                setEditModel(false)
+                setMarketPropsCard('')
+                props.setEdit(false)
+            })
+            alert(response.message)
+        } catch (erro) {
+            alert(erro)
+        }
 
     }
 
-    const HandleSubmit = async (e) => {
-        e.preventDefault()
-        const form = new FormData()
-        form.append('image', image)
+    const handleCancelUpdate = (e) => {
+        const className = e.target.getAttribute('class')
 
-        const headers = {
-            'headers': {
-                'Content-Type': 'application/json'
-            }
+        if (className === styles.container || className === styles.buttonCancel) {
+            setEditModel(false)
+            setMarketPropsCard('')
+            props.setEdit(false)
         }
+    }
 
-        await api.post('update', form, headers)
-            .then(response => console.log(response))
-            .catch((err) => console.log(err))
+    if (props.setEdit) {
+        window.addEventListener('keyup', (event) => {
+            if (event.code === 'Escape') {
+                setEditModel(false)
+                setMarketPropsCard('')
+                props.setEdit(false)
+            }
+        })
+    } else {
+        return
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.content}>
+        <div onClick={handleCancelUpdate} className={styles.container}>
+            <div className={styles.content} >
                 <div className={styles.header_create}>
-                    <h3>Create new market</h3>
+                    <h3>Edit SuperMarket</h3>
                 </div>
                 <form encType="multipart/form-data" onSubmit={handleSubmit(handleCreateMarket)} className={styles.form}>
                     <div>
                         <div>
                             <label >Name your market</label>
-                            <input placeholder={marketPropsCard.superMarketName} name="Name" id='Name' {...register("superMarketName")} />
+                            <input placeholder={marketPropsCard.superMarketName} {...register("superMarketName", {
+                                value: marketPropsCard.superMarketName
+                            })} />
                             <span >{errors.superMarketName ? errors.superMarketName.message : ""}</span>
 
-                            <label > New image</label>
-                            <input type="file" name="superMarketAdditionalImages"{...register("superMarketAdditionalImages")} />
-                            <span >{errorImage ? 'Image is required' : ""}</span>
+                            <label> Main image</label>
+
+                            <input type="file" {...register("superMarketMainImage")} />
+
 
                             <label > Additional Images</label>
-                            {/* <input placeholder="01" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage1")} />
-                            <span >{errorImage ? 'Image is required' : ""}</span>
+                            <input placeholder="01" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage1")} />
+           
 
                             <input placeholder="02" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage2")} />
-                            <span >{errorImage ? 'Image is required' : ""}</span>
+                  
 
                             <input placeholder="03" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage3")} />
-                            <span >{errorImage ? 'Image is required' : ""}</span> */}
+                         
 
                             <label > Location your market</label>
-                            <input placeholder="Street" name="Street" {...register("street")} />
+                            <input   {...register("street", {
+                                value: marketPropsCard.superMarketLocation.street
+                            })} />
                             <span >{errors.street ? errors.street.message : ""}</span>
 
-                            <input placeholder="Number" name=" Number" {...register("number")} />
+                            <input {...register("number", {
+                                value: marketPropsCard.superMarketLocation.number
+                            })} />
                             <span >{errors.number ? errors.number.message : ""}</span>
 
-                            <input placeholder="District" name="District" {...register("district")} />
+                            <input {...register("district", {
+                                value: marketPropsCard.superMarketLocation.district
+                            })} />
                             <span >{errors.district ? errors.district.message : ""}</span>
 
-                            <input placeholder="Zip" name="Zip"{...register("zip")} />
+                            <input  {...register("zip", {
+                                value: marketPropsCard.superMarketLocation.zip
+                            })} />
                             <span >{errors.zip ? errors.zip.message : ""}</span>
 
-                            <input placeholder="Country" name="Country" {...register("country")} />
+                            <input {...register("country", {
+                                value: marketPropsCard.superMarketLocation.country
+                            })} />
                             <span >{errors.country ? errors.country.message : ""}</span>
 
-                            <input placeholder="City" name="City" {...register("city")} />
+                            <input  {...register("city", {
+                                value: marketPropsCard.superMarketLocation.city
+                            })} />
                             <span >{errors.city ? errors.city.message : ""}</span>
 
-                            <input placeholder="State" name="State" {...register("state")} />
+                            <input   {...register("state", {
+                                value: marketPropsCard.superMarketLocation.state
+                            })} />
                             <span >{errors.state ? errors.state.message : ""}</span>
 
                         </div>
 
                         <div>
                             <label >Phone</label>
-                            <input placeholder="Phone" id="Phone" {...register("superMarketPhone")} />
+                            <input placeholder={marketPropsCard.superMarketPhone}  {...register("superMarketPhone", {
+                                value: marketPropsCard.superMarketPhone
+                            })} />
                             <span >{errors.superMarketPhone ? errors.superMarketPhone.message : ""}</span>
 
                             <label >Description</label>
-                            <textarea placeholder="Describe your market (max:500 characters)" name="Description" {...register("superMarketDescription")} />
+                            <textarea placeholder={marketPropsCard.superMarketDescription} {...register("superMarketDescription", {
+                                value: marketPropsCard.superMarketDescription
+                            })} />
                             <span >{errors.superMarketDescription ? errors.superMarketDescription.message : ""}</span>
                         </div>
                     </div>
-                    <button type="submit">Register</button>
+                    <div className={styles.contentButtons}>
+                        <div>
+                            <span className={styles.deleteOn}
+                                onClick={() => { handleDeleteMarket(marketPropsCard._id) }}>
+                                Delete
+                            </span>
+                        </div>
+                        <span className={styles.buttonCancel} onClick={handleCancelUpdate}>Cancel</span>
+                        <button type="submit">Update</button>
+                    </div>
+
                 </form>
 
             </div>

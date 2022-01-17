@@ -30,20 +30,25 @@ export function SuperMarketList() {
             setMarketPropsCard('')
         }
     }
-
+    
     useEffect(() => {
         handleListMarket()
     }, [])
+
+    useEffect(() => {
+        handleListMarket()
+    }, [editModel])
 
 
     return (
         <div className={styles.container}>
             <Navigation />
             <div className={styles.content}>
-
+            {!!editOn && <p>Select a supermarket</p>}
                 <div className={styles.header_list}>
                     <h3>Supermarkets</h3>
-                    {!!editOn && <span>Select a supermarket</span>}
+      
+                    
                     <button onClick={editMarket}>
                         <AiOutlineEdit />
                         Edit
@@ -59,7 +64,7 @@ export function SuperMarketList() {
                 </div>
             </div>
 
-            {!!editModel && <EditModel />}
+            {!!editModel && <EditModel  setEdit={setEdit} />}
         </div>
     )
 }

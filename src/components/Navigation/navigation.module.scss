@@ -1,3 +1,27 @@
+@keyframes hideMenu {
+    0%{
+        left: 0;
+    }
+    100% {
+        left: -100vw;
+    }
+}
+@keyframes showMenu {
+    0%{
+        left: -100vw;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+.hideMenu {
+    animation: hideMenu 1 0.5s forwards ;
+}
+.showMenu {
+    animation: showMenu 1 0.3s forwards ;
+}
+
 .container {
     p {
         color: var(--pink-light-300);
@@ -16,13 +40,44 @@
         text-decoration: none;
         color: white;
         font-weight: 500;
-        
-        svg{
+
+        svg {
             margin-right: 0.5rem;
         }
-        
-        &:hover{
+
+        &:hover {
             color: var(--pink-light-300);
+        }
+    }
+}
+
+@media (max-width: 501px) {
+    .container {
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        align-items: flex-start;
+        padding: 1rem;
+        top: 0;
+        left: 0;
+        width: 50%;
+        min-width: 150px;
+        height: 100vh;
+        background-color: var(--gray-300);
+        box-shadow: 1px 1px 5px 1px rgba($color: #d078e6, $alpha: 0.3);
+
+        > svg {
+            fill: white;
+            margin-left: auto;
+            cursor: pointer;
+            &:hover {
+                fill: var(--pink-light);
+            }
+        }
+
+        p {
+            margin-top: 15vh;
         }
     }
 }

@@ -7,8 +7,11 @@ header {
     flex-wrap: wrap;
     img {
         width: 40%;
-        max-width: 200px;
+        min-width: 220px;
+        max-width: 250px;
     }
+
+  
     div {
         min-width: 250px;
         gap: 5px;
@@ -18,8 +21,8 @@ header {
         svg {
             fill: white;
         }
-        
-        input{
+
+        input {
             border-radius: 0.8rem;
             min-width: 10vw;
             padding: 0.7rem;
@@ -28,6 +31,29 @@ header {
             font-size: 1rem;
         }
     }
+}
+.menuHamburguer{
+    display: none;
+}
+@media (max-width: 501px) {
+    .menuHamburguer {
+        display: block;
+        cursor: pointer;
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        height: 50px;
+        width: 50px;
 
+        svg {
+            fill: rgb(255, 255, 255);
+            transition: fill 0.2s;
+            &:hover {
+                fill: var(--pink-light-300);
+            }
+        }
     
+    }
+  
+     
 }

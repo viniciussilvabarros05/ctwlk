@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
 export function NewMarket() {
-    const [image, setImage] = useState('')
     const [errorImage, setErrorImage] = useState(false)
 
     const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -15,11 +14,10 @@ export function NewMarket() {
     const CreateMarketFormSchema = yup.object().shape({
 
         superMarketName: yup.string().required('Names is mandatory'),
-        // superMarketMainImage: yup.mixed().required(),
-        superMarketAdditionalImages: yup.mixed().required(),
-        // superMarketAdditionalImages: yup.mixed().required(),
-        // superMarketAdditionalImage2: yup.mixed().required("Image is required"),
-        // superMarketAdditionalImage3: yup.mixed().required("Image is required"),
+        superMarketMainImage: yup.mixed().required(),
+        superMarketAdditionalImage1: yup.mixed(),
+        superMarketAdditionalImage2: yup.mixed(),
+        superMarketAdditionalImage3: yup.mixed(),
 
 
         street: yup.string().min(2).required("Street is required"),
@@ -42,7 +40,7 @@ export function NewMarket() {
 
     const handleCreateMarket = async (values) => {
         const form = new FormData()
-        const Images = [values.superMarketAdditionalImages]
+        const Images = [values.superMarketMainImage]
         const validate = await Images.some(item => item.length === 0)
 
         if (validate) {
@@ -52,13 +50,16 @@ export function NewMarket() {
             setErrorImage(false)
         }
 
-        values.superMarketAdditionalImages = values.superMarketAdditionalImages[0]
-        form.append('superMarketAdditionalImages', values.superMarketAdditionalImages)
+        form.append('superMarketMainImage', values.superMarketMainImage[0])
+        form.append('superMarketAdditionalImage1', values.superMarketAdditionalImage1[0])
+        form.append('superMarketAdditionalImage2', values.superMarketAdditionalImage2[0])
+        form.append('superMarketAdditionalImage3', values.superMarketAdditionalImage3[0])
         form.append('superMarketName', values.superMarketName)
         form.append('street', values.street)
         form.append('number', values.number)
         form.append('zip', values.zip)
         form.append('country', values.country)
+        form.append('district', values.district)
         form.append('city', values.city)
         form.append('state', values.state)
         form.append('superMarketDescription', values.superMarketDescription)
@@ -66,24 +67,8 @@ export function NewMarket() {
 
         const response = await api.post('register', form)
 
-       alert(response.data)
+        alert(response.data)
 
-    }
-
-    const HandleSubmit = async (e) => {
-        e.preventDefault()
-        const form = new FormData()
-        form.append('image', image)
-
-        const headers = {
-            'headers': {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        await api.post('register', form, headers)
-            .then(response => console.log(response))
-            .catch((err) => console.log(err))
     }
 
 
@@ -97,18 +82,7 @@ export function NewMarket() {
                 </div>
 
 
-                {/* <form encType="multipart/form-data" onSubmit={HandleSubmit} className={styles.form}>
-                    <div>
-                        <div>
-                            <input type='file' name='image' id="image" onChange={(e) => setImage(e.target.files[0])}></input>
-                        </div>
 
-                        <div>
-
-                        </div>
-                    </div>
-                    <button type="submit">Register</button>
-                </form> */}
                 <form encType="multipart/form-data" onSubmit={handleSubmit(handleCreateMarket)} className={styles.form}>
                     <div>
                         <div>
@@ -118,18 +92,18 @@ export function NewMarket() {
                             <span >{errors.superMarketName ? errors.superMarketName.message : ""}</span>
 
                             <label > Main image</label>
-                            <input type="file" name="superMarketAdditionalImages"{...register("superMarketAdditionalImages")} />
+                            <input type="file" name="superMarketMainImage"{...register("superMarketMainImage")} />
                             <span >{errorImage ? 'Image is required' : ""}</span>
 
                             <label > Additional Images</label>
-                            {/* <input placeholder="01" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage1")} />
+                            <input placeholder="01" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage1")} />
                             <span >{errorImage ? 'Image is required' : ""}</span>
 
                             <input placeholder="02" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage2")} />
                             <span >{errorImage ? 'Image is required' : ""}</span>
 
                             <input placeholder="03" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage3")} />
-                            <span >{errorImage ? 'Image is required' : ""}</span> */}
+                            <span >{errorImage ? 'Image is required' : ""}</span>
 
                             <label > Location your market</label>
                             <input placeholder="Street" name="Street" {...register("street")} />

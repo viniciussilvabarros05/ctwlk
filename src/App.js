@@ -4,6 +4,7 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom'
 import { SuperMarketList } from './components/superMarketList/superMarketList';
 import { NewMarket } from './pages/NewMarket';
 import { Home } from './pages/Home';
+import { Navigation } from './components/Navigation/Navigation';
 import { UseContenxtProvider } from './contexts/useContext';
 
 function App() {
