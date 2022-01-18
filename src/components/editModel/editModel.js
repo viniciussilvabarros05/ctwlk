@@ -74,7 +74,7 @@ export function EditModel(props) {
                 setMarketPropsCard('')
                 props.setEdit(false)
             })
-            alert(response.message)
+            alert(response)
         } catch (erro) {
             alert(erro)
         }
