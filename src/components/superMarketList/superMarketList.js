@@ -11,16 +11,21 @@ export function SuperMarketList() {
     const [listMarket, setListMarket] = useState([])
     const [editOn, setEdit] = useState(false)
     const { editModel, setEditModel, setMarketPropsCard } = useContext(ContextApp)
+    const [animationLoading, setAnimationLoading] = useState(false)
 
     async function handleListMarket() {
+
         try {
-            const response = await api.get('list')
-            setListMarket(response.data)
-            console.log(response.data)
+            setAnimationLoading(true)
+            const Lister = await api.get('list').then(response => {
+                setAnimationLoading(false)
+                setListMarket(response.data)
+            })
         } catch (error) {
             alert(error.message)
         }
     }
+
     const editMarket = () => {
         if (editOn === false) {
             setEdit(true)
@@ -30,7 +35,7 @@ export function SuperMarketList() {
             setMarketPropsCard('')
         }
     }
-    
+
     useEffect(() => {
         handleListMarket()
     }, [])
@@ -44,18 +49,17 @@ export function SuperMarketList() {
         <div className={styles.container}>
             <Navigation />
             <div className={styles.content}>
-            {!!editOn && <p>Select a supermarket</p>}
+                {!!editOn && <p>Select a supermarket</p>}
                 <div className={styles.header_list}>
+
                     <h3>Supermarkets</h3>
-      
-                    
                     <button onClick={editMarket}>
                         <AiOutlineEdit />
                         Edit
                     </button>
                 </div>
                 <div className={styles.list}>
-
+                    {!!animationLoading && <div className={styles.loader}></div>}
                     {listMarket.map(market => {
                         return (
                             <CardList editOn={editOn} setEdit={setEdit} key={market._id} market={market} />
@@ -64,7 +68,7 @@ export function SuperMarketList() {
                 </div>
             </div>
 
-            {!!editModel && <EditModel  setEdit={setEdit} />}
+            {!!editModel && <EditModel setEdit={setEdit} />}
         </div>
     )
 }

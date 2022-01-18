@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { ContextApp } from "../../contexts/useContext";
-
+import swal from 'sweetalert2'
+import Swal from "sweetalert2";
 export function EditModel(props) {
 
     const { marketPropsCard, setMarketPropsCard, setEditModel } = useContext(ContextApp)
@@ -39,7 +40,7 @@ export function EditModel(props) {
 
     const handleCreateMarket = async (values) => {
         const form = new FormData()
-    
+
         form.append('id', marketPropsCard._id)
         form.append('superMarketMainImage', values.superMarketMainImage[0])
         form.append('superMarketAdditionalImage1', values.superMarketAdditionalImage1[0])
@@ -61,23 +62,41 @@ export function EditModel(props) {
             setEditModel(false)
             setMarketPropsCard('')
             props.setEdit(false)
-            alert(response.data)
+            swal.fire({ icon: 'success', text: 'Market Updated with success' })
         } catch (error) {
-            alert('Erro ao chamar')
+            swal.fire({ icon: 'error', text: error.message })
         }
 
     }
-    const handleDeleteMarket = async (id) => {
-        try {
-            const response = await api.delete(`delete/${id}`).then(item => {
-                setEditModel(false)
-                setMarketPropsCard('')
-                props.setEdit(false)
-            })
-            alert(response)
-        } catch (erro) {
-            alert(erro)
-        }
+    const handleDeleteMarket = (id) => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await api.delete(`delete/${id}`).then(item => {
+                        setEditModel(false)
+                        setMarketPropsCard('')
+                        props.setEdit(false)
+                    })
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                } catch (erro) {
+                    Swal.fire({ icon: 'error', text: erro })
+                }
+
+            }
+        })
+
 
     }
 
@@ -125,13 +144,13 @@ export function EditModel(props) {
 
                             <label > Additional Images</label>
                             <input placeholder="01" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage1")} />
-           
+
 
                             <input placeholder="02" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage2")} />
-                  
+
 
                             <input placeholder="03" type="file" className={styles.Additional_images} {...register("superMarketAdditionalImage3")} />
-                         
+
 
                             <label > Location your market</label>
                             <input   {...register("street", {

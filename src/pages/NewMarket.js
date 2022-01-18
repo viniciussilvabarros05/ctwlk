@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-
+import swal from 'sweetalert2'
 export function NewMarket() {
     const [errorImage, setErrorImage] = useState(false)
-
+    const [animationLoading, setAnimationLoading] = useState(false)
     const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
     const CreateMarketFormSchema = yup.object().shape({
@@ -40,7 +40,7 @@ export function NewMarket() {
 
     const handleCreateMarket = async (values) => {
         const form = new FormData()
-        const Images = [values.superMarketMainImage]
+        const Images = [values.superMarketMainImage, values.superMarketAdditionalImage1, values.superMarketAdditionalImage2, values.superMarketAdditionalImage3]
         const validate = await Images.some(item => item.length === 0)
 
         if (validate) {
@@ -65,9 +65,20 @@ export function NewMarket() {
         form.append('superMarketDescription', values.superMarketDescription)
         form.append('superMarketPhone', values.superMarketPhone)
 
-        const response = await api.post('register', form)
-
-        alert(response.data)
+        try {
+            setAnimationLoading(true)
+            const newMarket = await api.post('register', form).then(response => {
+                setAnimationLoading(false)
+                swal.fire({
+                    icon: response.data === "The supermarket name already exists" ? 'warning' : 'success',
+                    text: response.data,
+                })
+            })
+        } catch (erro) {
+            if (erro) {
+                console.log(erro.message)
+            }
+        }
 
     }
 
@@ -140,7 +151,10 @@ export function NewMarket() {
                             <span >{errors.superMarketDescription ? errors.superMarketDescription.message : ""}</span>
                         </div>
                     </div>
-                    <button type="submit">Register</button>
+
+
+                    <button type="submit">{animationLoading ? <div className={styles.loader}></div> : "Register"}</button>
+
                 </form>
 
             </div>

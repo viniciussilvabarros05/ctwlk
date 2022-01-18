@@ -1,3 +1,19 @@
+@keyframes is-rotating {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.loader {
+    animation: is-rotating 1s infinite;
+    width: 5px;
+    margin: auto;
+    height: 5px;
+    border: 6px solid var(--blue_800);
+    border-radius: 50%;
+    border-top-color: var(--pink-light);
+}
+
 .container {
     display: flex;
     margin-top: 2rem;
