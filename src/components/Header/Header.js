@@ -1,12 +1,12 @@
 import { useContext } from 'react'
-import { AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineMenu, AiOutlineSearch, AiFillAmazonCircle } from 'react-icons/ai'
 import logo from '../../assets/logo.svg'
 import { ContextApp } from '../../contexts/useContext'
 import styles from './header.module.scss'
 export function Header() {
-    const { hideMenu, setHideMenu } = useContext(ContextApp)
+    const { hideMenu, setHideMenu, } = useContext(ContextApp)
 
-    function handleHideMenu (){
+    function handleHideMenu() {
         if (hideMenu === false) {
             setHideMenu(true)
         } else {
@@ -17,13 +17,12 @@ export function Header() {
     return (
         <header>
             <div className={styles.menuHamburguer} onClick={handleHideMenu}>
-              <AiOutlineMenu size="40" onClick={handleHideMenu}/>
+                <AiOutlineMenu size="40" onClick={handleHideMenu} />
             </div>
 
             <img alt='logo' src={logo}></img>
             <div>
-                <input type='text' placeholder="Search supermarket"></input>
-                <AiOutlineSearch size="24" />
+                <AiFillAmazonCircle size='40'  />
             </div>
         </header >
     )

@@ -6,6 +6,7 @@ export function UseContenxtProvider(props) {
 
     const [editModel, setEditModel] = useState(false)
     const [menuLateral, setMenuLateral] = useState(false)
+   
     const [hideMenu, setHideMenu] = useState(false)
     const [showSlide, setShowSlide] = useState(false)
     const [marketPropsCard, setMarketPropsCard] = useState({})
@@ -21,6 +22,7 @@ export function UseContenxtProvider(props) {
             setHideMenu,
             showSlide,
             setShowSlide,
+           
         }}>
             {props.children}
         </ContextApp.Provider>

@@ -9,18 +9,23 @@ import styles from './superMarketList.module.scss'
 
 export function SuperMarketList() {
     const [listMarket, setListMarket] = useState([])
+    const [ listFilter, setFilter] = useState([])
     const [editOn, setEdit] = useState(false)
-    const { editModel, setEditModel, setMarketPropsCard } = useContext(ContextApp)
+    const { editModel, setEditModel, setMarketPropsCard, search } = useContext(ContextApp)
     const [animationLoading, setAnimationLoading] = useState(false)
+   
 
     async function handleListMarket() {
 
         try {
             setAnimationLoading(true)
             const Lister = await api.get('list').then(response => {
+
                 setAnimationLoading(false)
                 setListMarket(response.data)
             })
+
+
         } catch (error) {
             alert(error.message)
         }
