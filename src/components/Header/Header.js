@@ -21,9 +21,6 @@ export function Header() {
             </div>
 
             <img alt='logo' src={logo}></img>
-            <div>
-                <AiFillAmazonCircle size='40'  />
-            </div>
         </header >
     )
 }
