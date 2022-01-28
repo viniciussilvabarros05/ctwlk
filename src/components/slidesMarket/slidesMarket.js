@@ -25,7 +25,7 @@ export default function SlidesMarket() {
             setShowSlide(false);
     })
 
-    const formatDescription = ` address: ${marketPropsCard.superMarketLocation.district}, ${marketPropsCard.superMarketLocation.number}-${marketPropsCard.superMarketLocation.street}, ${marketPropsCard.superMarketLocation.city}-${marketPropsCard.superMarketLocation.state}, ${marketPropsCard.superMarketLocation.zip}`
+    const formatDescription = `Address: ${marketPropsCard.superMarketLocation.district}, ${marketPropsCard.superMarketLocation.number}-${marketPropsCard.superMarketLocation.street}, ${marketPropsCard.superMarketLocation.city}-${marketPropsCard.superMarketLocation.state}, ${marketPropsCard.superMarketLocation.zip}`
     return (
         <div className={styles.container} onClick={handleShowSlide}>
 
