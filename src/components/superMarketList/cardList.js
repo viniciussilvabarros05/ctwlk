@@ -35,17 +35,17 @@ export function CardList(props) {
             <img src={props.market.superMarketMainImage.location} alt={props.market.superMarketName} />
             <div>
                 <div>
-                    <h4>Name</h4>
+                    <h4>Nome do Supermercado</h4>
                     <p>{props.market.superMarketName}</p>
                 </div>
 
                 <div>
-                    <h4>Phone</h4>
+                    <h4>Telefone</h4>
                     <p>{props.market.superMarketPhone}</p>
                 </div>
             </div>
             <div className={styles.description}>
-                <h4>Description</h4>
+                <h4>Descrição</h4>
                 <p> {props.market.superMarketDescription}
                 </p>
             </div>

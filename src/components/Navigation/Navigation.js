@@ -39,12 +39,12 @@ export function Navigation() {
 
                 <NavLink to="/newMarket" onClick={() => { setHideMenu(true) }}>
                     <AiOutlineAppstoreAdd size="24" />
-                    New market
+                    Create a New Market
                 </NavLink>
 
                 <NavLink to="/" onClick={() => { setHideMenu(true) }} >
                     <AiOutlineOrderedList size="24" />
-                    supermarkets
+                    SuperMarkets
                 </NavLink>
             </nav>
         </div>
